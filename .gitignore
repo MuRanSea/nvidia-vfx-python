@@ -1,0 +1,7 @@
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Sample output
+output/
