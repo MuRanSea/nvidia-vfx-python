@@ -23,7 +23,8 @@ Setup
 ### Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone git@github.com:NVIDIA-Maxine/nvidia-vfx-python-samples.git        # Using SSH, or
+# git clone https://github.com/NVIDIA-Maxine/nvidia-vfx-python-samples.git  # Using HTTP
 cd nvidia-vfx-python-samples
 ```
 
@@ -76,7 +77,7 @@ Video Super Resolution Sample — Command-Line Reference
 Links
 -----
 
-- **nvidia-vfx (Python package on PyPI):** TODO – link when published
-- **nvidia-vfx-python API documentation:** [GitLab Pages](https://maxine-cv.gitlab-master-pages.nvidia.com/ai4m-sdk-python/nvidia-vfx-python) TODO – public link when published
+- [nvidia-vfx Python package on PyPI](https://pypi.org/project/nvidia-vfx/)
+- [nvidia-vfx Python bindings guide](https://docs.nvidia.com/maxine/vfx-python/latest/index.html)
 
 > **Note:** This project is currently not accepting contributions.
