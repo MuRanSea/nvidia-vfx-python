@@ -1,83 +1,72 @@
-NVIDIA VFX Python Samples
-=========================
+# NVIDIA VFX Python Samples
 
-This repository contains sample applications for the nvidia-vfx Python bindings of the NVIDIA Video Effects (VFX) SDK. The Video Super Resolution sample is a Python reference application that demonstrates real-time video upscaling: it reads an input video file, upscales each frame using GPU-accelerated AI models to improve sharpness and reduce compression artifacts, and writes the enhanced result to a new output file based on command-line options.
+本仓库包含 NVIDIA Video Effects (VFX) SDK 的 nvidia-vfx Python 绑定的示例应用。Video Super Resolution（视频超分辨率）示例演示了实时视频增强：该应用读取输入视频文件，使用 GPU 加速的 AI 模型对每一帧进行超分辨率处理以提升清晰度并减少压缩伪影，然后根据命令行选项将增强后的结果写入新的输出文件。
 
-Requirements
-------------
+## 环境要求
 
-- **Python:** 3.10 or later
-- **GPU:** NVIDIA GPU with Tensor Cores (Turing, Ampere, Ada, Blackwell, or Hopper architecture)
-- **GPU driver:**
-  - Windows: 570.65 or later (for Tesla Compute Cluster (TCC) devices, 595 or later is required)
-  - Linux: 570.190+, 580.82+, or 590.44+
-- **Git:** https://git-scm.com/downloads
-- **Git LFS:** https://git-lfs.com/ (required for sample video assets)
-- **OS:**
-  - Windows: 64-bit Windows 10 or later
-  - Linux: Ubuntu 20.04, 22.04, 24.04, Debian 12, or RHEL 8/9
+- **Python:** 3.12 或更高版本
+- **GPU:** 支持 Tensor Cores 的 NVIDIA GPU（Turing、Ampere、Ada、Blackwell 或 Hopper 架构）
+- **GPU 驱动:**
+  - Windows: 570.65 或更高版本（TCC 设备需要 595 或更高版本）
+  - Linux: 570.190+、580.82+ 或 590.44+
+- **操作系统:**
+  - Windows: 64 位 Windows 10 或更高版本
+  - Linux: Ubuntu 20.04、22.04、24.04、Debian 12 或 RHEL 8/9
 
-Setup
------
+## 安装
 
-### Clone the repository
+### 克隆仓库
 
 ```bash
-git clone git@github.com:NVIDIA-Maxine/nvidia-vfx-python-samples.git        # Using SSH, or
-# git clone https://github.com/NVIDIA-Maxine/nvidia-vfx-python-samples.git  # Using HTTP
-cd nvidia-vfx-python-samples
 ```
 
-Initialize Git LFS so sample videos are downloaded correctly:
+初始化 Git LFS 以正确下载示例视频：
 
 ```bash
-git lfs install
-git lfs pull
 ```
 
-### Create a virtual environment and install dependencies
+### 安装依赖
+
+本项目使用 `uv` 管理 Python 依赖，但 `nvidia-vfx` 由于加密系统限制无法通过 `uv pip install` 直接安装，需按以下步骤操作：
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate        # Linux
-# .venv\Scripts\Activate.ps1     # Windows PowerShell
-pip install -r requirements.txt
+uv sync
+uv run python -m ensurepip --upgrade
+uv run python -m pip install nvidia-vfx==0.1.0.1 --no-cache-dir
 ```
 
-Running the application
------------------------
+## 运行应用
 
-From the repository root (with your virtual environment activated):
+在仓库根目录下（确保虚拟环境已激活）：
 
 ```bash
-# Default: 2× upscale, HIGH quality, using bundled sample video
+# 默认：2× 超分辨率，HIGH 质量，使用内置示例视频
 python video_super_resolution.py
 
-# Custom input and output
+# 指定输入输出路径
 python video_super_resolution.py -i path/to/input.mp4 -o path/to/output.mp4
 
-# 4× upscale with ULTRA quality
+# 4× 超分辨率，ULTRA 质量
 python video_super_resolution.py --scale 4 --quality ULTRA
 
-# Same-resolution denoise (no upscaling)
+# 同分辨率降噪（不放大）
 python video_super_resolution.py --scale 1 --quality DENOISE_HIGH
 ```
 
-Video Super Resolution Sample — Command-Line Reference
-------------------------------------------------------
+## 命令行参数说明
 
-| Argument            | Description |
-|---------------------|-------------|
-| `-i`, `--input`     | The input video file path. Default: `assets/Drift_RUN_Master_Custom.mp4` (relative to the script location) |
-| `-o`, `--output`    | The output video file path. Default: `output/sample_sr.mp4` (relative to the script location) |
-| `--scale`          | The scale factor. Choices: `1`, `2`, `3`, `4`. Default: `2`. Values `2`, `3`, and `4` upscale both width and height (for example, 1920x1080 → 3840x2160 at `2`×), with higher factors demanding more GPU memory and compute. A value of `1` keeps the original resolution and enables same‑resolution cleanup modes (denoise/deblur) instead of upscaling. |
-| `--quality`        | The processing mode / quality level. For `--scale` ≥ `2`, choices: `BICUBIC`, `LOW`, `MEDIUM`, `HIGH`, `ULTRA` (default: `HIGH`), where `BICUBIC` is a fast non‑AI baseline, `LOW`/`MEDIUM` favor speed, and `HIGH`/`ULTRA` maximize detail enhancement and artifact reduction. When `--scale 1` is used, additional choices: `DENOISE_LOW`, `DENOISE_MEDIUM`, `DENOISE_HIGH`, `DENOISE_ULTRA` (noise/compression artifact removal) and `DEBLUR_LOW`, `DEBLUR_MEDIUM`, `DEBLUR_HIGH`, `DEBLUR_ULTRA` (sharpening for soft or blurry footage). |
-| `-h`, `--help`      | Display help information for the command. |
+| 参数               | 说明                                                                                                                                                                                                                                                                                              |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `-i`, `--input`  | 输入视频文件路径。默认为 `assets/Drift_RUN_Master_Custom.mp4`（相对于脚本所在目录）                                                                                                                                                                                                                                    |
+| `-o`, `--output` | 输出视频文件路径。默认为 `output/sample_sr.mp4`（相对于脚本所在目录）                                                                                                                                                                                                                                                  |
+| `--scale`        | 缩放因子。选项：`1`、`2`、`3`、`4`，默认 `2`。`2`、`3`、`4` 会放大宽高（例如 1920×1080 在 `2`× 下变为 3840×2160），因子越大对 GPU 显存和算力要求越高。设为 `1` 时保持原始分辨率，使用降噪/去模糊模式。                                                                                                                                                             |
+| `--quality`      | 处理模式/质量级别。`--scale` ≥ `2` 时可选：`BICUBIC`、`LOW`、`MEDIUM`、`HIGH`（默认）、`ULTRA`，其中 `BICUBIC` 为快速非 AI 基线，`HIGH`/`ULTRA` 最大化细节增强。当 `--scale 1` 时额外可选：`DENOISE_LOW`、`DENOISE_MEDIUM`、`DENOISE_HIGH`、`DENOISE_ULTRA`（去噪/去压缩伪影）以及 `DEBLUR_LOW`、`DEBLUR_MEDIUM`、`DEBLUR_HIGH`、`DEBLUR_ULTRA`（锐化模糊 footage）。 |
+| `-h`, `--help`   | 显示帮助信息。                                                                                                                                                                                                                                                                                         |
 
-Links
------
+## 相关链接
 
-- [nvidia-vfx Python package on PyPI](https://pypi.org/project/nvidia-vfx/)
-- [nvidia-vfx Python bindings guide](https://docs.nvidia.com/maxine/vfx-python/latest/index.html)
+- [nvidia-vfx Python 包（PyPI）](https://pypi.org/project/nvidia-vfx/)
+- [nvidia-vfx Python 绑定使用指南](https://docs.nvidia.com/maxine/vfx-python/latest/index.html)
 
-> **Note:** This project is currently not accepting contributions.
+<br />
+

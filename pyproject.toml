@@ -1,0 +1,13 @@
+[project]
+name = "nvidia-vfx-samples"
+version = "0.1.0"
+description = "NVIDIA VFX Python Samples"
+requires-python = ">=3.12"
+dependencies = [
+    "av",
+    "numpy",
+    "torch"
+]
+
+[[tool.uv.index]]
+url = "https://download.pytorch.org/whl/cu128"
