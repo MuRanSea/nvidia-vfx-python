@@ -6,7 +6,10 @@ requires-python = ">=3.12"
 dependencies = [
     "av",
     "numpy",
-    "torch"
+    "torch",
+    "pillow",
+    "pytest",
+    "pytest-mock",
 ]
 
 [[tool.uv.index]]

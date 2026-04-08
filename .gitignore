@@ -6,3 +6,18 @@ env/
 # Sample output
 output/
 build/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.eggs/
+*.egg-info/
+dist/
+*.whl
+
+# Test
+.pytest_cache/
+.coverage
+htmlcov/
